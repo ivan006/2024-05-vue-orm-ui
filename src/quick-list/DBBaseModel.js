@@ -138,6 +138,14 @@ export default class DBBaseModel extends Model {
             filtersObj = Helpers.prepareFiltersForLaravel(options.filters); // Now returns an object
             preparedRels = Helpers.prepareRelationsForLaravel(relationships)
 
+        } else if (modelClass.adapter === "airtable") {
+            // Wrap the actual Airtable URL inside the proxy URL
+            const airtableUrl = `${url}?limit=10&offset=0`;
+            // computedUrl = `https://capetownlists.co.za/?url=${encodeURIComponent(airtableUrl)}`;
+            computedUrl = `https://capetownlists.co.za/?url=${airtableUrl}`;
+
+            // preparedRels = Helpers.prepareRelationsForAirtable(relationships);
+            // filtersObj = Helpers.prepareFiltersForAirtable(options.filters);
         }
 
         return this.customApiBase(headers)
@@ -180,6 +188,9 @@ export default class DBBaseModel extends Model {
         } else if(modelClass.adapter === "laravel") {
             computedUrl = `${url}/${id}`
             preparedRels = Helpers.prepareRelationsForLaravel(relationships)
+        } else if (modelClass.adapter === "airtable") {
+            computedUrl = `${url}/${id}`;
+            preparedRels = Helpers.prepareRelationsForAirtable(relationships); // likely still returns {}
         }
 
         return this.customApiBase(headers)

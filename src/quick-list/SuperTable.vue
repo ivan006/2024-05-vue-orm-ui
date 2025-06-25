@@ -794,7 +794,21 @@ export default {
 
         // this.items = this.applyFilters(response.response.data.data, this.filterValsComp);
         // this.items = this.applyFilters(response.response.data.data, this.filterVals);
-        this.items = response.response.data.data;
+
+        if (this.model.adapter == "supabase") {
+          this.items = response.response.data.data;
+        } else if (this.model.adapter == "laravel") {
+          this.items = response.response.data.data;
+        } else if (this.model.adapter === "airtable") {
+          this.items = response.response.data.records.map(record => {
+            return {
+              id: record.id,
+              createdTime: record.createdTime,
+              ...record.fields
+            };
+          });
+        }
+
         // console.log("this.items")
         // console.log(this.items)
         // this.items = response.response.data.data
@@ -809,6 +823,8 @@ export default {
           }
         } else if (this.model.adapter == "laravel") {
           count = response.response.data.total;
+        } else if (this.model.adapter === "airtable") {
+
         }
         this.itemsLength = count; // Assuming your API returns a total count
         this.$emit("fetchComplete", this.model.name, this.items);

@@ -44,9 +44,10 @@
             <q-card-section class="q-pa-sm flex flex-center">
               <img
                   alt="&nbsp;File not found."
-                  :src="`${item[header.field]}`"
+                  :src="`${item[header.field][0].url}`"
                   style="max-width: 100%"
               />
+                  <!--:src="`${item[header.field]}`"-->
               <!--<q-img-->
               <!--    alt="File not found."-->
               <!--    :src="`${item[header.field]}`"-->
@@ -69,10 +70,10 @@
             <!--/>-->
 
             <!--:src="`${superOptions.model?.fileUrlPrefix}/${item[header.field]}`"-->
-            <q-img alt="File not found." :src="`${item[header.field]}`">
+            <q-img alt="File not found." :src="`${item[header.field][0].url}`">
               <!--:ratio="16/5"-->
               <div
-                  v-if="!item[header.field]"
+                  v-if="!item[header.field][0].url"
                   class="absolute-full text-subtitle2 flex flex-center"
               >
                 Oops, no image found!

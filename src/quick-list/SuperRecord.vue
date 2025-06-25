@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <template v-if="treeMode">
       <SuperRecordTreeModeParent
           :configsCollection="configsCollection"
@@ -83,7 +82,7 @@ export default {
       required: true,
     },
     id: {
-      type: Number,
+      type: [Number, String],
       required: true,
     },
     displayMapField: {
@@ -155,7 +154,17 @@ export default {
           )
           .then((response) => {
 
-            this.item = response.response.data.data
+            if (this.model.adapter == "supabase") {
+              this.item = response.response.data.data;
+            } else if (this.model.adapter == "laravel") {
+              this.item = response.response.data.data;
+            } else if (this.model.adapter === "airtable") {
+              this.item = {
+                id: response.response.data.id,
+                createdTime: response.response.data.createdTime,
+                ...response.response.data.fields
+              };
+            }
             this.loading = false
             this.initialLoadHappened = true;
             this.$emit("initialLoadHappened", true);

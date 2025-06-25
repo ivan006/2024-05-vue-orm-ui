@@ -89,6 +89,32 @@ class Helpers {
         return result;
     }
 
+    static prepareFiltersForAirtable(obj) {
+        let formulas = [];
+
+        for (const [key, filter] of Object.entries(obj)) {
+            if (typeof filter === 'object' && filter !== null ) {
+                if (filter.range) {
+                    if (filter.range.start) {
+                        formulas.push(`AND(IS_AFTER({${key}}, '${filter.range.start}'), IS_BEFORE({${key}}, '${filter.range.end}'))`);
+                    }
+                }
+            } else if (filter !== null) {
+                formulas.push(`{${key}} = '${filter}'`);
+            }
+        }
+
+        if (formulas.length === 0) {
+            return {};
+        }
+
+        return {
+            filterByFormula: formulas.length > 1 ? `AND(${formulas.join(", ")})` : formulas[0]
+        };
+    }
+
+
+
     static getFieldFromModelOrParent(fields, usageType) {
         let targetField = null;
 
@@ -143,6 +169,12 @@ class Helpers {
             include: result,
         };
     }
+
+    static prepareRelationsForAirtable(arr) {
+        return {}; // Airtable doesn't support relation expansion in the API directly
+    }
+
+
 
 
 
